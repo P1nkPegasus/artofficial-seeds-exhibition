@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>art[official] seeds exhibition</title>
+    
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self'; 
+      script-src 'self' 'unsafe-inline'; 
+      style-src 'self' 'unsafe-inline'; 
+      img-src 'self';
+    ">
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/config.js"></script>
+</head>
+<body>
+    <header class="exhibition-header">
+        <h1 id="exhibition-title">art[official] seeds exhibition</h1>
+        <h2 id="artist-name">Rukiya "rook" Dykes</h2>
+        <p class="exhibition-intro">
+            Here's the documentation for the exhibition.
+        </p>
+    </header>
+
+    <main class="artwork-directory">
+        <h3>Exhibition Works</h3>
+        <!-- TODO - add the list of artworks -->
+        <p class="artwork-intro">
+            Click on any artwork to view additional augmented reality (AR)layers.
+        </p>
+
+        <ul id="artwork-list" class="minimal-list"></ul>
+    </main>
+
+    <script>
+        document.getElementById('exhibition-title').textContent = exhibitionConfig.title;
+        document.getElementById('artist-name').textContent = exhibitionConfig.artist;
+
+        const listContainer = document.getElementById('artwork-list');
+
+        for (const [id, data] of Object.entries(exhibitionConfig.artworks)) {
+            
+            const listItem = document.createElement('li');
+            listItem.className = 'artwork-item';
+
+           
+            const link = document.createElement('a');
+            link.href = `artwork.html?id=${id}`;
+            link.className = 'artwork-link';
+
+            link.innerHTML = `
+                <strong>${data.title}</strong>
+                <span class="artwork-desc">${data.description}</span>
+            `;
+
+            listItem.appendChild(link);
+            listContainer.appendChild(listItem);
+        }
+    </script>
+</body>
+</html>
