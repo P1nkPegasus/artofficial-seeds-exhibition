@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Viewer - art[official] seeds</title>
+
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline' 'unsafe-eval'; 
+        style-src 'self' 'unsafe-inline'; 
+        img-src 'self' data: blob:; 
+        media-src 'self' blob:; 
+        worker-src 'self' blob:;
+        connect-src 'self' data: blob:;
+    ">
+    <meta http-equiv="Permissions-Policy" content="camera=*, microphone=(), geolocation=()">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!--global -->
+    <script src="js/config.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image-three.prod.js"></script>
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        #ar-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-family: sans-serif;
+            pointer-events: auto;
+            /* Re-enables clicking on just this button */
+        }
+
+        #scanning-prompt {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-family: sans-serif;
+            font-weight: bold;
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        #ar-container video,
+        #ar-container canvas {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            z-index: 1 !important;
+        }
+
+        #ui-overlay {
+            z-index: 10 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ui-overlay">
+        <a href="index.html" class="back-button">← Back to Exhibition</a>
+        <div id="scanning-prompt">Point camera at the physical artwork</div>
+    </div>
+
+    <!--  MindAR camera injection and three.js canvas-->
+    <div id="ar-container"></div>
+
+    <script src="js/ar-app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+const exhibitionConfig = {
+    title: "art[official] seeds exhibition",
+    artist: "Rukiya 'Rook' Dykes",
+    
+    artworks: {
+        'piece1': {
+            title: "Seed 001",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece1.mind", 
+            mediaType: "video",                       
+            mediaPath: "assets/media/piece1.mp4",     
+            scale: { x: 1, y: 1, z: 1 },              
+            position: { x: 0, y: 0, z: 0 }            
+        },
+        'piece2': {
+            title: "Seed 002",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece2.mind",
+            mediaType: "model",
+            mediaPath: "assets/media/piece2_depth.glb",
+            scale: { x: 0.5, y: 0.5, z: 0.5 },
+            position: { x: 0, y: 0.1, z: 0 }
+        },
+        'piece3': {
+            title: "Seed 003",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece3.mind",
+            mediaType: "video",
+            mediaPath: "assets/media/piece3.mp4",
+            scale: { x: 1.2, y: 1.2, z: 1.2 },
+            position: { x: 0, y: 0, z: 0 }
+        },
+        'piece4': {
+            title: "Seed 004",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece4.mind",
+            mediaType: "model",
+            mediaPath: "assets/media/piece4.glb",
+            scale: { x: 1, y: 1, z: 1 },
+            position: { x: 0, y: 0, z: 0 }
+        },
+        'piece5': {
+            title: "Seed 005",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece5.mind",
+            mediaType: "video",
+            mediaPath: "assets/media/piece5.mp4",
+            scale: { x: 1, y: 1, z: 1 },
+            position: { x: 0, y: 0, z: 0 }
+        },
+        'piece6': {
+            title: "Seed 006",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece6.mind",
+            mediaType: "model",
+            mediaPath: "assets/media/piece6.glb",
+            scale: { x: 1, y: 1, z: 1 },
+            position: { x: 0, y: 0, z: 0 }
+        },
+        'piece7': {
+            title: "Seed 007",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece7.mind",
+            mediaType: "image",
+            mediaPath: "assets/media/piece7-body.png",
+            scale: { x: 1, y: 1, z: 1 },
+            position: { x: 0, y: 0, z: 0 }
+        },
+        'piece8': {
+            title: "Seed 008",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece8.mind",
+            mediaType: "model",
+            mediaPath: "assets/media/piece8.glb",
+            scale: { x: 1, y: 1, z: 1 },
+            position: { x: 0, y: 0, z: 0 }
+        },
+        'piece9': {
+            title: "Seed 009",
+            description: "Description coming soon...",
+            targetPath: "assets/targets/piece9.mind",
+            mediaType: "video",
+            mediaPath: "assets/media/piece9.mp4",
+            scale: { x: 1, y: 1, z: 1 },
+            position: { x: 0, y: 0, z: 0 }
+        }
+    }
+};
