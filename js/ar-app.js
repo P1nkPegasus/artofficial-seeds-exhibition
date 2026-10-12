@@ -36,75 +36,53 @@ function createVideoAsset(artworkData) {
   return mesh;
 }
 
-// function createImageAsset(artworkData) {
-//   const texture = new THREE.TextureLoader().load(artworkData.mediaPath);
-//   const geometry = new THREE.PlaneGeometry(1, 1);
-//   const material = new THREE.MeshBasicMaterial({
-//     map: texture,
-//     transparent: true,
-//   });
-//   const mesh = new THREE.Mesh(geometry, material);
-
-//   mesh.scale.set(artworkData.scale.x, artworkData.scale.y, artworkData.scale.z);
-//   mesh.position.set(
-//     artworkData.position.x,
-//     artworkData.position.y,
-//     artworkData.position.z,
-//   );
-
-//   return mesh;
-// }
-
-// TODO: clean up the PLANE
-// function createImageAsset(artworkData) {
-//   const geometry = new THREE.PlaneGeometry(1, 1);
-//   const material = new THREE.MeshBasicMaterial({
-//     color: 0xff0000,
-//     side: THREE.DoubleSide,
-//   });
-//   const mesh = new THREE.Mesh(geometry, material);
-
-//   mesh.scale.set(
-//     artworkData.scale.x,
-//     artworkData.scale.y,
-//     artworkData.scale.z,
-//   );
-
-//   mesh.position.set(
-//     artworkData.position.x,
-//     artworkData.position.y,
-//     artworkData.position.z,
-//   );
-
-//   return mesh;
-// }
-
-//TODO clean up and show actual image asset
 function createImageAsset(artworkData) {
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const texture = new THREE.TextureLoader().load(
+    artworkData.mediaPath,
+    () => console.log("Overlay image loaded:", artworkData.mediaPath),
+    undefined,
+    (error) => console.error("Overlay image failed to load:", error),
+  );
+  const geometry = new THREE.PlaneGeometry(1, 1);
   const material = new THREE.MeshBasicMaterial({
-    color: 0xff0000,
+    map: texture,
+    transparent: true,
+    side: THREE.DoubleSide,
   });
 
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.position.set(0, 0, 0.1);
+  mesh.position.set(
+    artworkData.position.x,
+    artworkData.position.y,
+    artworkData.position.z + 0.1,
+  );
+  mesh.scale.set(
+    artworkData.scale.x,
+    artworkData.scale.y,
+    artworkData.scale.z,
+  );
 
   return mesh;
 }
 
 function attachArtworkAsset(artworkData, anchorGroup, scene) {
+  const assetGroup = new THREE.Group();
+  anchorGroup.add(assetGroup);
+
   if (artworkData.mediaType === "video") {
     const videoMesh = createVideoAsset(artworkData);
-    anchorGroup.add(videoMesh);
+    assetGroup.add(videoMesh);
   } else if (artworkData.mediaType === "image") {
     const imageMesh = createImageAsset(artworkData);
-    anchorGroup.add(imageMesh);
+    assetGroup.add(imageMesh);
   } else if (artworkData.mediaType === "model") {
-    loadModelAsset(artworkData, anchorGroup);
+    loadModelAsset(artworkData, assetGroup);
     setupLighting(scene);
   } else {
     throw new Error(`Unsupported media type: ${artworkData.mediaType}`);
   }
+
+  return assetGroup;
 }
 
 //.glb 3D model async and attaches it to the AR anchor group.
@@ -143,6 +121,17 @@ function setupLighting(scene) {
   scene.add(directionalLight);
 }
 
+function toggleArtworkScale(assetGroup, interaction) {
+  if (interaction?.type !== "toggle-scale") {
+    return;
+  }
+
+  const isEnlarged = assetGroup.userData.isEnlarged === true;
+  const scale = isEnlarged ? 1 : interaction.enlargedScale;
+  assetGroup.scale.set(scale, scale, scale);
+  assetGroup.userData.isEnlarged = !isEnlarged;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   try {
     const artworkData = validateArtworkId(
@@ -168,12 +157,14 @@ document.addEventListener("DOMContentLoaded", () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     const anchor = mindarThree.addAnchor(0);
     anchor.group.visible = false;
+    let targetIsFound = false;
 
     const prompt = document.getElementById("scanning-prompt");
 
     anchor.onTargetFound = () => {
       console.log("🎯 TARGET FOUND!");
 
+      targetIsFound = true;
       anchor.group.visible = true;
 
 
@@ -200,12 +191,27 @@ console.log("Child renderOrder:", child.renderOrder);
 
     anchor.onTargetLost = () => {
       console.log("Target lost.");
+      targetIsFound = false;
       //   anchor.group.visible = false;
       prompt.style.display = "block";
       prompt.innerText = "Tracking lost. Point camera at artwork.";
     };
 
-    attachArtworkAsset(artworkData, anchor.group, scene);
+    const assetGroup = attachArtworkAsset(artworkData, anchor.group, scene);
+
+    const arContainer = document.getElementById("ar-container");
+    arContainer.style.touchAction = "manipulation";
+    arContainer.addEventListener("pointerup", () => {
+      console.log("AR surface tapped");
+
+      if (!targetIsFound) {
+        console.log("Ignoring tap because the target is not found");
+        return;
+      }
+
+      toggleArtworkScale(assetGroup, artworkData.interaction);
+      console.log("Artwork scale:", assetGroup.scale.toArray());
+    });
 
     mindarThree
       .start()
