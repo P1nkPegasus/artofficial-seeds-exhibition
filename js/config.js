@@ -63,7 +63,7 @@ const exhibitionConfig = {
       //original asset
       targetPath: "assets/targets/piece7.mind",
       mediaType: "image",
-      mediaPath: "assets/media/piece7-body.png",
+      mediaPath: "assets/media/piece7/piece7-body.png",
       scale: { x: 1, y: 1, z: 1 },
       position: { x: 0, y: 0, z: 0 },
     },
@@ -72,7 +72,7 @@ const exhibitionConfig = {
       description: "resilience through grief",
       targetPath: "assets/targets/piece8.mind",
       mediaType: "image",
-      mediaPath: "assets/media/piece8-body.png",
+      mediaPath: "assets/media/piece8/piece8-body.png",
       scale: { x: 1, y: 1, z: 1 },
       position: { x: 0, y: 0, z: 0 },
     },
@@ -81,7 +81,7 @@ const exhibitionConfig = {
       description: "drowning tales of supression",
       targetPath: "assets/targets/piece9.mind",
       mediaType: "image",
-      mediaPath: "assets/media/piece9-body.png",
+      mediaPath: "assets/media/piece9/piece9-body.png",
       scale: { x: 1, y: 1, z: 1 },
       position: { x: 0, y: 0, z: 0 },
       interaction: {
