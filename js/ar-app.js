@@ -30,7 +30,7 @@ function createVideoAsset(artworkData) {
   mesh.position.set(
     artworkData.position.x,
     artworkData.position.y,
-    artworkData.position.z,
+    artworkData.position.z + 0.1,
   );
 
   return mesh;
@@ -65,6 +65,73 @@ function createImageAsset(artworkData) {
   return mesh;
 }
 
+function createCubeAsset(artworkData) {
+  const size = artworkData.cubeSize ?? 0.5;
+  const geometry = new THREE.BoxGeometry(size, size, size);
+  const material = new THREE.MeshBasicMaterial({
+    color: artworkData.cubeColor ?? 0xff0000,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+
+  mesh.position.set(
+    artworkData.position.x,
+    artworkData.position.y,
+    artworkData.position.z,
+  );
+  mesh.scale.set(
+    artworkData.scale.x,
+    artworkData.scale.y,
+    artworkData.scale.z,
+  );
+
+  return mesh;
+}
+
+function createImageLayersAsset(artworkData) {
+  const layerGroup = new THREE.Group();
+  const textureLoader = new THREE.TextureLoader();
+  const layerAspectRatio = 6000 / 4800;
+
+  artworkData.layers.forEach((layerPath, index) => {
+    const imagePath = `${artworkData.layerPath}${layerPath}`;
+    const texture = textureLoader.load(
+      imagePath,
+      () => console.log("Layer image loaded:", imagePath),
+      undefined,
+      (error) => console.error("Layer image failed to load:", imagePath, error),
+    );
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+      side: THREE.DoubleSide,
+      depthTest: false,
+      depthWrite: false,
+    });
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(layerAspectRatio, 1),
+      material,
+    );
+
+    mesh.position.set(
+      artworkData.position.x,
+      artworkData.position.y,
+      artworkData.position.z,
+    );
+    mesh.renderOrder = index + 1;
+    mesh.scale.set(
+      artworkData.scale.x,
+      artworkData.scale.y,
+      artworkData.scale.z,
+    );
+    mesh.userData.isEnlarged = false;
+    mesh.userData.baseScale = mesh.scale.clone();
+    mesh.userData.layerIndex = index;
+    layerGroup.add(mesh);
+  });
+
+  return layerGroup;
+}
+
 function attachArtworkAsset(artworkData, anchorGroup, scene) {
   const assetGroup = new THREE.Group();
   anchorGroup.add(assetGroup);
@@ -75,6 +142,10 @@ function attachArtworkAsset(artworkData, anchorGroup, scene) {
   } else if (artworkData.mediaType === "image") {
     const imageMesh = createImageAsset(artworkData);
     assetGroup.add(imageMesh);
+  } else if (artworkData.mediaType === "cube") {
+    assetGroup.add(createCubeAsset(artworkData));
+  } else if (artworkData.mediaType === "image-layers") {
+    assetGroup.add(createImageLayersAsset(artworkData));
   } else if (artworkData.mediaType === "model") {
     loadModelAsset(artworkData, assetGroup);
     setupLighting(scene);
@@ -132,6 +203,19 @@ function toggleArtworkScale(assetGroup, interaction) {
   assetGroup.userData.isEnlarged = !isEnlarged;
 }
 
+function toggleLayerScale(layer, interaction) {
+  if (interaction?.type !== "layer-scale") {
+    return;
+  }
+
+  const isEnlarged = layer.userData.isEnlarged === true;
+  const scale = isEnlarged ? layer.userData.baseScale : layer.userData.baseScale
+    .clone()
+    .multiplyScalar(interaction.enlargedScale);
+  layer.scale.copy(scale);
+  layer.userData.isEnlarged = !isEnlarged;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   try {
     const artworkData = validateArtworkId(
@@ -143,6 +227,9 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Artwork:", artworkData.title);
     console.log("Target:", artworkData.targetPath);
     console.log("Media:", artworkData.mediaPath);
+    console.log("Media type:", artworkData.mediaType);
+    // console.log("Layers:", artworkData.layers);
+    // console.log("Layer path:", artworkData.layerPath);
 
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
       container: document.getElementById("ar-container"),
@@ -170,6 +257,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("Anchor visible:", anchor.group.visible);
       console.log("Anchor children:", anchor.group.children.length);
+      console.log(
+        "Rendered meshes:",
+        anchor.group.children[0]?.children[0]?.children.map((layer) => ({
+          index: layer.userData.layerIndex,
+          visible: layer.visible,
+          scale: layer.scale.toArray(),
+          renderOrder: layer.renderOrder,
+        })),
+      );
       console.log(
         "Child visibility:",
         anchor.group.children.map((child) => ({
@@ -200,12 +296,36 @@ console.log("Child renderOrder:", child.renderOrder);
     const assetGroup = attachArtworkAsset(artworkData, anchor.group, scene);
 
     const arContainer = document.getElementById("ar-container");
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
     arContainer.style.touchAction = "manipulation";
-    arContainer.addEventListener("pointerup", () => {
+    arContainer.addEventListener("pointerup", (event) => {
       console.log("AR surface tapped");
 
       if (!targetIsFound) {
         console.log("Ignoring tap because the target is not found");
+        return;
+      }
+
+      if (artworkData.interaction?.type === "layer-scale") {
+        const bounds = arContainer.getBoundingClientRect();
+        pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
+        pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
+        raycaster.setFromCamera(pointer, camera);
+
+        const intersections = raycaster.intersectObjects(assetGroup.children, true);
+        const layer = intersections.find(
+          (intersection) => intersection.object.userData.layerIndex !== undefined,
+        )?.object;
+
+        if (layer) {
+          toggleLayerScale(layer, artworkData.interaction);
+          console.log(
+            "Layer scale:",
+            layer.userData.layerIndex,
+            layer.scale.toArray(),
+          );
+        }
         return;
       }
 
@@ -216,6 +336,7 @@ console.log("Child renderOrder:", child.renderOrder);
     mindarThree
       .start()
       .then(() => {
+        console.log("MindAR started. Waiting for target recognition.");
         //TODO
         // document.getElementById("scanning-prompt").style.display = "none";
         renderer.setAnimationLoop(() => {
