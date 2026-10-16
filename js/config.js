@@ -1,6 +1,6 @@
 const exhibitionConfig = {
   title: "art[official] seeds exhibition",
-  artist: "Rukiya 'Rook' Dykes",
+  artist: "Rukiya 'rook' Dykes",
 
   /* when creating the .mind from the compiler, you may have to crop the image if it has a lot of negative space */
   artworks: {
