@@ -117,7 +117,7 @@ const exhibitionConfig = {
     },
     piece7: {
       title: "Seed 007",
-      description: "seated in orange reflection",
+      description: "blessings in the storm",
       targetPath: "assets/targets/piece7.mind",
       mediaType: "image",
       mediaPath: "assets/media/piece7/piece7-body.png",
@@ -126,7 +126,7 @@ const exhibitionConfig = {
     },
     piece8: {
       title: "Seed 008",
-      description: "resilience through grief",
+      description: "blooming in the whirlwind",
       targetPath: "assets/targets/piece8.mind",
       mediaType: "image",
       mediaPath: "assets/media/piece8/piece8-body.png",
@@ -135,7 +135,7 @@ const exhibitionConfig = {
     },
     piece9: {
       title: "Seed 009",
-      description: "drowning tales of supression",
+      description: "as above, so below",
       targetPath: "assets/targets/piece9.mind",
       mediaType: "image",
       mediaPath: "assets/media/piece9/piece9-body.png",
