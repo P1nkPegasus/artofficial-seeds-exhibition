@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,17 +13,46 @@
       img-src 'self';
     ">
 
+    <nav class="navbar" id="main-nav">
+        <div class="nav-logo">
+            <a href="index.html" id="site-title">art[official] seeds exhibition</a>
+        </div>
+
+        <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false"
+            aria-controls="site-navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <ul class="nav-links" id="site-navigation">
+            <li><a href="index.html">Home</a></li>
+            <!-- <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Galleries <span class="arrow">▼</span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Photography</a></li>
+                    <li><a href="#">Digital Art</a></li>
+                    <li><a href="#">Sculptures</a></li>
+                </ul>
+            </li> -->
+            <li><a href="#">About</a></li>
+            <!-- <li><a href="#">Contact</a></li> -->
+        </ul>
+    </nav>
+
+
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/nav.js"></script>
     <script src="js/config.js"></script>
+
 </head>
 
 <body class="site-page">
     <header class="exhibition-header">
-        <h1 id="exhibition-title">art[official] seeds exhibition</h1>
         <h2 id="artist-name">rook</h2>
-        <p class="exhibition-intro">
+        <!-- <p class="exhibition-intro">
             Here's the documentation for the exhibition.
-        </p>
+        </p> -->
     </header>
 
     <main class="artwork-directory">
@@ -35,7 +65,7 @@
     </main>
 
     <script>
-        document.getElementById('exhibition-title').textContent = exhibitionConfig.title;
+        document.getElementById('site-title').textContent = exhibitionConfig.title;
         document.getElementById('artist-name').textContent = exhibitionConfig.artist;
 
         const listContainer = document.getElementById('artwork-list');
@@ -61,7 +91,8 @@
     </script>
 
     <div class="exhibition-footer">
-        <p>Read about my intervew with <a href="https://voyagedallas.com/interview/daily-inspiration-meet-rukiya-dykes">Voyage Dallas</a>.</p>
+        <p>Read about my intervew with <a
+                href="https://voyagedallas.com/interview/daily-inspiration-meet-rukiya-dykes">Voyage Dallas</a>.</p>
     </div>
 
     <footer class="site-footer">

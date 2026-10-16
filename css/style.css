@@ -3,6 +3,159 @@
     --text-color: #172DC1;
 }
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4%;
+    background: #172DC1;
+    border-bottom: 1px solid #C3EA59;
+    position: relative;
+    z-index: 1000;
+}
+
+.nav-logo a {
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-decoration: none;
+    color: #C3EA59;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links a {
+    display: block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #C3EA59;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #E34A99;
+}
+
+/* Desktop Dropdown Behavior */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #172DC1;
+    min-width: 180px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.05);
+    border: 1px solid #E34A99;
+    border-radius: 4px;
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 24px;
+        height: 18px;
+    }
+
+    .menu-toggle .bar {
+        width: 100%;
+        height: 2px;
+        background-color: #C3EA59;
+        transition: 0.3s;
+    }
+
+    /* Transform Hamburger into an 'X' when open */
+    .menu-toggle.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: #E34A99;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 0;
+        border-bottom: 1px solid #E34A99;
+        display: none;
+    }
+
+    .nav-links.show {
+        display: flex;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .nav-links a {
+        padding: 1rem 4%;
+        width: 100%;
+    }
+
+    /* Dynamic Mobile Dropdown Adjustment */
+    .dropdown-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        border: none;
+        background: #E34A99;
+        padding-left: 1.5rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+
+    .dropdown.open .dropdown-menu {
+        max-height: 300px;
+    }
+}
+
 html,
 body {
     box-sizing: border-box;
@@ -37,6 +190,7 @@ a {
 
 .site-page .artwork-directory {
     flex: 1;
+    padding-bottom: 24px;
 }
 
 .exhibition-header,

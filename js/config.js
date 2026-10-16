@@ -23,7 +23,7 @@ const exhibitionConfig = {
         "Chaos_Over_Order_Print_Ready-11.png",
         "Chaos_Over_Order_Print_Ready-12.png",
         "Chaos_Over_Order_Print_Ready-13.png",
-        "Chaos_Over_Order_Print_Ready-14.png"
+        "Chaos_Over_Order_Print_Ready-14.png",
       ],
       layerPath: "assets/media/piece1/optimized/",
       scale: { x: 2, y: 2, z: 2 },
@@ -63,10 +63,9 @@ const exhibitionConfig = {
       title: "Seed 003",
       description: "SELAH",
       targetPath: "assets/targets/targets4.mind",
-      
+
       // mediaType: "image",
       // mediaPath: "assets/media/piece3/optimized/Selah_Print_Ready-1.png",
-
 
       mediaType: "image-layers",
       layers: [

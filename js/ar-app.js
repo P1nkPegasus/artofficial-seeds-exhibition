@@ -228,8 +228,8 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Target:", artworkData.targetPath);
     console.log("Media:", artworkData.mediaPath);
     console.log("Media type:", artworkData.mediaType);
-    // console.log("Layers:", artworkData.layers);
-    // console.log("Layer path:", artworkData.layerPath);
+    console.log("Layers:", artworkData.layers);
+    console.log("Layer path:", artworkData.layerPath);
 
     const mindarThree = new window.MINDAR.IMAGE.MindARThree({
       container: document.getElementById("ar-container"),
@@ -365,7 +365,7 @@ console.log("Child renderOrder:", child.renderOrder);
     window.addEventListener("beforeunload", stopAr);
   } catch (error) {
     document.getElementById("scanning-prompt").innerText =
-      "Artwork not found. Please rescan.";
+      "Artwork not found. Please rescan. Try moving the camera closer or further away from the artwork.";
     console.error(error.message);
   }
 });
