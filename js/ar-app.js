@@ -216,6 +216,44 @@ function toggleLayerScale(layer, interaction) {
   layer.userData.isEnlarged = !isEnlarged;
 }
 
+function easeInOut(progress) {
+  return progress < 0.5
+    ? 2 * progress * progress
+    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+}
+
+function startFlipY(assetGroup, interaction) {
+  if (interaction?.type !== "flip-y" || assetGroup.userData.flipYAnimating) {
+    return;
+  }
+
+  assetGroup.userData.flipYAnimating = true;
+  assetGroup.userData.flipYStart = performance.now();
+  assetGroup.userData.flipYDuration = interaction.duration ?? 1900;
+  assetGroup.userData.flipYBaseRotation = assetGroup.rotation.y;
+}
+
+function updateFlipY(assetGroup) {
+  if (!assetGroup.userData.flipYAnimating) {
+    return;
+  }
+
+  const elapsed = performance.now() - assetGroup.userData.flipYStart;
+  const duration = assetGroup.userData.flipYDuration;
+  const progress = Math.min(elapsed / duration, 1);
+  const easedProgress = easeInOut(progress);
+  const rotation = easedProgress <= 0.5
+    ? easedProgress * 2 * Math.PI
+    : (1 - (easedProgress - 0.5) * 2) * Math.PI;
+
+  assetGroup.rotation.y = assetGroup.userData.flipYBaseRotation + rotation;
+
+  if (progress === 1) {
+    assetGroup.rotation.y = assetGroup.userData.flipYBaseRotation;
+    assetGroup.userData.flipYAnimating = false;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   try {
     const artworkData = validateArtworkId(
@@ -329,7 +367,11 @@ console.log("Child renderOrder:", child.renderOrder);
         return;
       }
 
-      toggleArtworkScale(assetGroup, artworkData.interaction);
+      if (artworkData.interaction?.type === "flip-y") {
+        startFlipY(assetGroup, artworkData.interaction);
+      } else {
+        toggleArtworkScale(assetGroup, artworkData.interaction);
+      }
       console.log("Artwork scale:", assetGroup.scale.toArray());
     });
 
@@ -340,6 +382,7 @@ console.log("Child renderOrder:", child.renderOrder);
         //TODO
         // document.getElementById("scanning-prompt").style.display = "none";
         renderer.setAnimationLoop(() => {
+          updateFlipY(assetGroup);
           renderer.render(scene, camera);
         });
       })

@@ -132,7 +132,7 @@ const exhibitionConfig = {
       targetPath: "assets/targets/piece7.mind",
       mediaType: "image",
       mediaPath: "assets/media/piece7/piece7-body.png",
-      scale: { x: 1, y: 1, z: 1 },
+      scale: { x: 2, y: 2, z: 2 },
       position: { x: 0, y: 0, z: 0 },
       interaction: {
         type: "toggle-scale",
@@ -158,11 +158,11 @@ const exhibitionConfig = {
       targetPath: "assets/targets/piece9.mind",
       mediaType: "image",
       mediaPath: "assets/media/piece9/piece9-body.png",
-      scale: { x: 1, y: 1, z: 1 },
+      scale: { x: 2, y: 2, z: 2 },
       position: { x: 0, y: 0, z: 0 },
       interaction: {
-        type: "toggle-scale",
-        enlargedScale: 2,
+        type: "flip-y",
+        duration: 1900,
       },
     },
   },
